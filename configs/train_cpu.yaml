@@ -1,0 +1,37 @@
+# CPU-optimized training configuration for vulnerability detection
+# This configuration uses smaller batch sizes and gradient accumulation for CPU training
+
+# Data configuration
+data:
+  data_path: "data/Suicide_Detection.csv"
+  max_length: 512
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  random_seed: 42
+  balance_strategy: null  # Options: null, "undersample", "oversample"
+  text_column: "text"
+  label_column: "label"
+
+# Model configuration
+model:
+  model_name: "cardiffnlp/twitter-roberta-base"
+  num_labels: 3
+  use_gradient_checkpointing: false  # Overhead not worth it on CPU
+  dropout: 0.1
+
+# Training configuration
+training:
+  output_dir: "outputs/cpu_run"
+  num_epochs: 3
+  batch_size: 4  # Small batch size for CPU
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_steps: 500
+  eval_steps: 1000  # Less frequent evaluation to save time
+  save_steps: 2000
+  logging_steps: 200
+  gradient_accumulation_steps: 4  # Effective batch size of 16
+  fp16: false  # Not supported on CPU
+  device: "cpu"  # Explicitly use CPU
+  report_to: "none"  # Disable TensorBoard (change to "tensorboard" to enable)

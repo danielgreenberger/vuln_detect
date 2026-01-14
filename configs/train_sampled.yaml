@@ -1,0 +1,46 @@
+# Training configuration for sampled 3-class dataset
+# This dataset contains 3,000 balanced samples (1,000 samples per class)
+#
+# Dataset details:
+# - File: data/sampled_3class_dataset.csv
+# - Columns: text, label (label contains integers: 0, 1, 2)
+# - Class 0: not_vulnerable (Neutral)
+# - Class 1: indicator (Depression/Mental Health Indicators)
+# - Class 2: ideation (Suicide Risk/Ideation)
+# - Total: 3,000 samples (1,000 per class)
+
+# Data configuration
+data:
+  data_path: "data/sampled_3class_dataset.csv"
+  max_length: 512
+  train_split: 0.8  # 80% for training (2,400 samples)
+  val_split: 0.2    # 20% for validation (600 samples)
+  test_split: 0.0   # No separate test set for small dataset
+  random_seed: 42
+  balance_strategy: null  # Dataset is already balanced
+  text_column: "text"
+  label_column: "label"
+
+# Model configuration
+model:
+  model_name: "cardiffnlp/twitter-roberta-base"
+  num_labels: 3
+  use_gradient_checkpointing: false
+  dropout: 0.1
+
+# Training configuration
+# Using smaller epochs and conservative settings for the small dataset
+training:
+  output_dir: "outputs/sampled_3class_run"
+  num_epochs: 5  # Small dataset, moderate epochs to avoid overfitting
+  batch_size: 8  # Reduced for CPU training to avoid memory issues
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_steps: 100  # Reduced from 500 (smaller dataset)
+  eval_steps: 150    # Evaluate more frequently
+  save_steps: 300    # Save checkpoints more frequently
+  logging_steps: 50  # Log more frequently for monitoring
+  gradient_accumulation_steps: 1
+  fp16: false
+  device: "cpu"  # Use CPU to avoid MPS memory issues
+  report_to: "none"  # Disable TensorBoard (change to "tensorboard" to enable)

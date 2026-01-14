@@ -1,0 +1,47 @@
+# Default training configuration for vulnerability detection
+# This configuration uses the consolidated dataset created by `run_data_prep.sh`.
+
+# --- Data Configuration ---
+# The `raw_data_path` points to the output of our new data preparation script.
+raw_data_path: "data/processed/final_dataset.csv"
+
+# Enable the preprocessing step to clean and split our new custom dataset.
+run_preprocessing: true
+processed_data_dir: "data/processed/default" # Directory to save the split data
+balance_strategy: "undersample" # Balance the dataset for better performance
+train_split: 0.8
+val_split: 0.1
+test_split: 0.1
+
+# --- Model, Training, and Other Parameters ---
+# These are inherited from the project's default configuration (`src/vuln_detect/config.py`)
+# but can be overridden here if needed.
+
+# Model configuration
+model_name: "cardiffnlp/twitter-roberta-base"
+num_labels: 3
+use_gradient_checkpointing: false
+
+# Training configuration
+output_dir: "outputs/default_run"
+num_epochs: 4
+batch_size: 8
+learning_rate: 2.0e-5
+weight_decay: 0.01
+warmup_steps: 500
+logging_steps: 100
+gradient_accumulation_steps: 2
+fp16: false # Keep false for CPU
+
+# Evaluation and Saving
+eval_strategy: "steps"
+eval_steps: 500
+save_strategy: "steps"
+save_steps: 500
+load_best_model_at_end: true
+metric_for_best_model: "eval_f1"
+save_total_limit: 2
+
+# System settings
+random_seed: 42
+report_to: "none"

@@ -1,0 +1,25 @@
+# Core dependencies for vulnerability detection transformer fine-tuning
+torch>=2.0.0
+transformers>=4.35.0
+datasets>=2.14.0
+evaluate>=0.4.0
+accelerate>=0.24.0
+scikit-learn>=1.3.0
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Configuration management
+pyyaml>=6.0.0
+
+# Progress bars and utilities
+tqdm>=4.65.0
+
+# Web UI for model interaction
+dash
+
+# Model backup/restore to Hugging Face Hub
+huggingface_hub>=0.19.0
+
+# Optional: TensorBoard for training visualization
+# Uncomment if you want to use TensorBoard logging:
+# tensorboard>=2.14.0

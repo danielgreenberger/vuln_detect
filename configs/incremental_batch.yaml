@@ -1,0 +1,74 @@
+# Incremental Training Configuration
+# Use this for training on sequential data batches.
+
+# --- Preprocessing Configuration ---
+# Preprocessing is disabled for incremental runs. The training script will
+# clean the raw batch data in memory.
+run_preprocessing: false
+
+# --- Data Configuration ---
+# For incremental training, the training data path is set dynamically in `train.py`
+# using the --batch-number flag (e.g., 'data/incremental/batch_1.csv').
+# We only need to define the path to the fixed validation set here.
+val_data_path: "data/incremental/test_set.csv"
+val_sample_size: 500 # Use a sample for faster validation during training
+max_length: 256
+
+# --- Model Configuration ---
+# For Batch 1, the base model is used. For subsequent batches, `train.py`
+# automatically loads the checkpoint from the previous batch.
+model:
+  model_name: "cardiffnlp/twitter-roberta-base"
+  num_labels: 3
+  use_gradient_checkpointing: true
+
+# --- Training Configuration ---
+# These parameters are aligned with the original successful project.
+training:
+  output_dir: "outputs/batch_1_run" # Base output dir; `train.py` appends the batch number.
+  
+  # Core training parameters
+  num_epochs: 3
+  batch_size: 4
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_steps: 0  # Aligned with original project (no warmup).
+  gradient_accumulation_steps: 4 # Effective batch size = 4 * 4 = 16
+  
+  # Logging and Saving Strategy (aligned with original project)
+  logging_steps: 50
+  save_strategy: "epoch"
+  eval_strategy: "epoch"
+  save_total_limit: 2
+  load_best_model_at_end: true
+  metric_for_best_model: "f1" # Aligned with original project
+  
+  # System settings
+  fp16: false
+  device: "cpu"
+  report_to: "none"
+
+# ============================================================================
+# NEW INCREMENTAL TRAINING WORKFLOW
+# ============================================================================
+#
+# The logic for incremental learning (updating model path, learning rate, etc.)
+# is now handled AUTOMATICALLY by `train.py` based on the --batch-number.
+#
+# --- BATCH 1 Command ---
+# python train.py --config configs/incremental_batch.yaml --batch-number 1
+#
+# --- BATCH 2 Command ---
+# python train.py --config configs/incremental_batch.yaml --batch-number 2
+#
+# --- BATCH N Command ---
+# python train.py --config configs/incremental_batch.yaml --batch-number N
+#
+# The script will automatically:
+# 1. Load the correct batch file (e.g., data/incremental/batch_N.csv).
+# 2. Clean the raw batch data in memory (including label transformation).
+# 3. Set the correct output directory (e.g., outputs/batch_N_run).
+# 4. For N > 1, load the model from the previous batch's output.
+# 5. For N > 1, automatically reduce the learning rate and number of epochs.
+#
+# ============================================================================
