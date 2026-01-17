@@ -5,6 +5,20 @@ Fine-tunes RoBERTa to detect depression and suicide risk in text. Includes data 
 ## Quick Start
 
 ```bash
+# Install Git LFS (if not already installed)
+brew install git-lfs  # macOS
+# or: sudo apt-get install git-lfs  # Linux
+
+# Clone repository and pull large files
+git clone git@github.com:danielgreenberger/vuln_detect.git
+cd vuln_detect
+git lfs pull
+
+# Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
