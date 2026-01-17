@@ -1,0 +1,6 @@
+.git/objects/b3/4c7b46870a406e4158b18be342b4f647138436 filter=lfs diff=lfs merge=lfs -text
+.git/objects/70/6276ff88f70376cc6ba5e79eba77e1b5f6e8be filter=lfs diff=lfs merge=lfs -text
+data/original_kaggle_datasets/kaggle_3.csv filter=lfs diff=lfs merge=lfs -text
+data/processed/final_dataset.csv filter=lfs diff=lfs merge=lfs -text
+outputs/batch_1_run/final_model/model.safetensors filter=lfs diff=lfs merge=lfs -text
+outputs/batch_2_run/final_model/model.safetensors filter=lfs diff=lfs merge=lfs -text
